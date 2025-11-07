@@ -119,7 +119,7 @@ const CustomerTable = () => {
     const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
         setShowFilters(false);
-      } },
+      },[showFilters, setShowFilters]);
   }, [page, filteredAndSorted, isLoading]);
 
   // Intersection observer for infinite scroll
