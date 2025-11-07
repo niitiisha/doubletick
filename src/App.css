@@ -81,8 +81,8 @@ body {
 
 .customers-title-row {
   display: flex;
-  margin-left: 30px;
-  align-items: center;
+  margin-right: 10px;
+  align-items: left;
   gap: 0.5rem;
 }
 
