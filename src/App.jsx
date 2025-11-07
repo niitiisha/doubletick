@@ -155,13 +155,6 @@ const CustomerTable = () => {
     });
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterRef.current && !filterRef.current.contains(event.target)) {
-        setShowFilters(false);
-      }
-    };
-
   const SortIcon = ({ column }) => {
     if (sortConfig.key !== column) return null;
     return sortConfig.direction === 'asc' ? <ChevronUpIcon /> : <ChevronDownIcon />;
