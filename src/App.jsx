@@ -97,14 +97,7 @@ const CustomerTable = () => {
     setDisplayedRecords(filteredAndSorted.slice(0, ROWS_PER_PAGE));
     setPage(1);
   }, [filteredAndSorted]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterRef.current && !filterRef.current.contains(event.target)) {
-        setShowFilters(false);
-      },[filteredAndSorted]);
   
-
   // Load more records on scroll
   const loadMore = useCallback(() => {
     if (isLoading) return;
@@ -121,6 +114,12 @@ const CustomerTable = () => {
         setIsLoading(false);
       }, 100);
     }
+
+    useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilters(false);
+      } },
   }, [page, filteredAndSorted, isLoading]);
 
   // Intersection observer for infinite scroll
