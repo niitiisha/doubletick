@@ -98,6 +98,13 @@ const CustomerTable = () => {
     setPage(1);
   }, [filteredAndSorted]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilters(false);
+      }
+    };
+
   // Load more records on scroll
   const loadMore = useCallback(() => {
     if (isLoading) return;
