@@ -102,8 +102,8 @@ const CustomerTable = () => {
     const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
         setShowFilters(false);
-      }
-    };
+      },[filteredAndSorted]);
+  
 
   // Load more records on scroll
   const loadMore = useCallback(() => {
