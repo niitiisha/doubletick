@@ -2,8 +2,10 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import Logo from '../public/media/Doubletick Logo.png';
 import './App.css';
 
+// Generate 1M records
 const generateRecords = (count) => {
   const records = [];
+  // const names = ['John Smith', 'Emma Wilson', 'Michael Brown', 'Sarah Davis', 'James Johnson', 'Emily Taylor', 'David Martinez', 'Olivia Anderson', 'Robert Thomas', 'Sophia Garcia'];
   const addedByList = ['Kartikey Mishra'];
   
   for (let i = 0; i < count; i++) {
@@ -20,6 +22,8 @@ const generateRecords = (count) => {
   }
   return records;
 };
+
+
 
 const ChevronUpIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -48,17 +52,16 @@ const CustomerTable = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  
   const observerRef = useRef();
   const searchTimeoutRef = useRef();
-  const filterRef = useRef(null); // Ref for filter dropdown
-
+  
   const ROWS_PER_PAGE = 30;
 
   // Filter and sort records
   const filteredAndSorted = useMemo(() => {
     let filtered = allRecords;
     
+    // Search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       filtered = filtered.filter(record => 
@@ -68,6 +71,7 @@ const CustomerTable = () => {
       );
     }
     
+    // Sort
     if (sortConfig.key) {
       filtered = [...filtered].sort((a, b) => {
         const aVal = a[sortConfig.key];
@@ -135,7 +139,9 @@ const CustomerTable = () => {
       clearTimeout(searchTimeoutRef.current);
     }
     
-    searchTimeoutRef.current = setTimeout(() => {}, 250);
+    searchTimeoutRef.current = setTimeout(() => {
+      // Search is already handled by the filteredAndSorted memo
+    }, 250);
   };
 
   // Sort handler
@@ -154,85 +160,161 @@ const CustomerTable = () => {
     return sortConfig.direction === 'asc' ? <ChevronUpIcon /> : <ChevronDownIcon />;
   };
 
-  // Close filter dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterRef.current && !filterRef.current.contains(event.target)) {
-        setShowFilters(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
     <div className="app-container">
       {/* Header */}
       <div className="app-header">
         <div className="logo-container">
-          <img className='logo-image' src={Logo} alt="" />
+          <img className = 'logo-image' src={Logo} alt="" />
+        </div>
+      </div>
+
+      {/* Customers header */}
+      <div className="customers-header">
+        <div className="customers-title-row">
+          <h2 className="customers-title">All Customers</h2>
+          <span className="customers-count">1230</span>
         </div>
       </div>
 
       {/* Search and Filters */}
       <div className="search-filters-container">
-        <div className="search-wrapper">
-          <input
-            type="text"
-            placeholder="Search Customers"
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-input"
-          />
-        </div>
-        
-        <div className="filter-dropdown-wrapper" ref={filterRef}>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="filter-button"
-          >
-            Add Filters
-          </button>
-          
-          {showFilters && (
-            <div className="filter-dropdown">
-              <div className="filter-item">Filter 1</div>
-              <div className="filter-item">Filter 2</div>
-              <div className="filter-item">Filter 3</div>
-              <div className="filter-item">Filter 4</div>
+        <div className="search-filters-row">
+          <div className="search-wrapper">
+            <div className="search-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.09995 13.5002C11.0823 13.5002 13.5 11.0825 13.5 8.1002C13.5 5.11786 11.0823 2.7002 8.09995 2.7002C5.11761 2.7002 2.69995 5.11786 2.69995 8.1002C2.69995 11.0825 5.11761 13.5002 8.09995 13.5002Z" stroke="#2D2D2D" stroke-width="2" stroke-linecap="square"/>
+                <path d="M12.0505 12.5312L15.3291 15.9375" stroke="#2D2D2D" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+
             </div>
-          )}
+            <input
+              type="text"
+              placeholder="Search Customers"
+              value={searchTerm}
+              onChange={handleSearch}
+              className="search-input"
+            />
+          </div>
+          
+          <div className="filter-dropdown-wrapper">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="filter-button"
+            >
+              <div className="filter-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.25 4.31368C2.25 3.17384 3.17383 2.25 4.31368 2.25H13.6863C14.8262 2.25 15.75 3.17384 15.75 4.31368V5.3623C15.75 6.18325 15.4019 6.96552 14.7919 7.51572L11.006 11.2593C10.7572 11.484 10.6149 11.8036 10.6149 12.1386V13.6674C10.6149 14.1519 10.3201 14.5875 9.86987 14.7663L8.42275 15.3428C7.64635 15.6522 6.80207 15.0801 6.80207 14.2438V11.7649C6.80207 11.4512 6.67727 11.1498 6.45543 10.9279L3.09868 7.93969C2.55575 7.39602 2.25 6.65903 2.25 5.88989V4.31368Z" stroke="#2D2D2D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              Add Filters
+            </button>
+            
+            {showFilters && (
+              <div className="filter-dropdown">
+                <div className="filter-item">Filter 1</div>
+                <div className="filter-item">Filter 2</div>
+                <div className="filter-item">Filter 3</div>
+                <div className="filter-item">Filter 4</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Table */}
       <div className="table-container">
         <table className="customer-table">
-          <thead>
+          <thead className="table-header">
             <tr>
-              <th>Customer</th>
-              <th>Score</th>
-              <th>Email</th>
-              <th>Last message sent at</th>
-              <th>Added by</th>
+              <th className="th-checkbox">
+                <input type="checkbox" className="checkbox" />
+              </th>
+              <th 
+                className="th-sortable"
+                onClick={() => handleSort('name')}
+              >
+                <div className="th-content">
+                  Customer
+                  <SortIcon column="name" />
+                </div>
+              </th>
+              <th 
+                className="th-sortable"
+                onClick={() => handleSort('score')}
+              >
+                <div className="th-content">
+                  Score
+                  <SortIcon column="score" />
+                </div>
+              </th>
+              <th 
+                className="th-sortable"
+                onClick={() => handleSort('email')}
+              >
+                <div className="th-content">
+                  Email
+                  <SortIcon column="email" />
+                </div>
+              </th>
+              <th 
+                className="th-sortable"
+                onClick={() => handleSort('lastMessageAt')}
+              >
+                <div className="th-content">
+                  Last message sent at
+                  <SortIcon column="lastMessageAt" />
+                </div>
+              </th>
+              <th 
+                className="th-sortable"
+                onClick={() => handleSort('addedBy')}
+              >
+                <div className="th-content">
+                  Added by
+                  <SortIcon column="addedBy" />
+                </div>
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="table-body">
             {displayedRecords.map((record, index) => (
-              <tr key={record.id} ref={index === displayedRecords.length - 1 ? lastRowRef : null}>
-                <td>{record.name}</td>
-                <td>{record.score}</td>
-                <td>{record.email}</td>
-                <td>{record.lastMessageAt}</td>
-                <td>{record.addedBy}</td>
+              <tr 
+                key={`${record.id}-${index}`}
+                ref={index === displayedRecords.length - 1 ? lastRowRef : null}
+                className="table-row"
+              >
+                <td className="td-checkbox">
+                  <input type="checkbox" className="checkbox" />
+                </td>
+                <td className="td-customer">
+                  <div className="customer-info">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3.69397 13.3332C3.69397 11.9275 4.80306 10.1772 7.99983 10.1772C11.196 10.1772 12.305 11.9148 12.305 13.3212" stroke="#7A7A7A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M10.7502 5.41744C10.7502 6.93653 9.51891 8.16786 7.99978 8.16786C6.48131 8.16786 5.24997 6.93653 5.24997 5.41744C5.24997 3.89833 6.48131 2.66699 7.99978 2.66699C9.51891 2.66699 10.7502 3.89833 10.7502 5.41744Z" stroke="#7A7A7A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+
+                    <div className="customer-details">
+                      <div className="customer-name">{record.name}</div>
+                      <div className="customer-phone">{record.phone}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="td-score">{record.score}</td>
+                <td className="td-email">{record.email}</td>
+                <td className="td-date">{record.lastMessageAt}</td>
+                <td className="td-added-by">
+                  <div className="added-by-info">
+                    <UserIcon />
+                    {record.addedBy}
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };
